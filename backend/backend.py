@@ -6,12 +6,12 @@ from backend.pricing_engine import calculate_dynamic_price
 
 app = FastAPI(title="Flight Booking System")
 
-# ✅ HEALTH CHECK
+
 @app.get("/")
 def root():
     return {"message": "Flight Booking API is running successfully!"}
 
-# ✈️ Flights
+
 @app.get("/flights")
 def get_all_flights():
     conn = get_db_connection()
@@ -38,7 +38,7 @@ def create_flight(flight: Flight):
     conn.close()
     return new_flight
 
-# 👤 Passengers
+
 @app.post("/passengers")
 def create_passenger(passenger: Passenger):
     conn = get_db_connection()
@@ -61,7 +61,7 @@ def get_all_passengers():
     conn.close()
     return passengers
 
-# 💺 Bookings
+
 @app.post("/bookings")
 def create_booking(booking: Booking):
     conn = get_db_connection()
@@ -113,7 +113,7 @@ def get_all_bookings():
     conn.close()
     return bookings
 
-# 💳 Transactions
+
 @app.get("/transactions")
 def get_all_transactions():
     conn = get_db_connection()
@@ -123,7 +123,7 @@ def get_all_transactions():
     conn.close()
     return tx
 
-# ⚙️ Pricing Rules
+
 @app.get("/pricing_rules")
 def get_pricing_rules():
     conn = get_db_connection()
@@ -133,7 +133,7 @@ def get_pricing_rules():
     conn.close()
     return rules
 
-# 🕒 Fare History
+
 @app.get("/fare_history")
 def get_fare_history():
     conn = get_db_connection()
