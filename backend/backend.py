@@ -38,10 +38,6 @@ def create_flight(flight: Flight):
     conn.close()
     return new_flight
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 20c0fc9 (milestore 3)
 @app.post("/passengers")
 def create_passenger(passenger: Passenger):
     conn = get_db_connection()
@@ -64,50 +60,7 @@ def get_all_passengers():
     conn.close()
     return passengers
 
-<<<<<<< HEAD
-=======
-# @app.post("/bookings")
-# def create_booking(booking: Booking):
-#     conn = get_db_connection()
-#     cur = conn.cursor()
 
-#     cur.execute("SELECT seats_available, total_seats, base_fare, departure FROM flights WHERE id = %s;", (booking.flight_id,))
-#     flight = cur.fetchone()
-#     if not flight or flight["seats_available"] <= 0:
-#         raise HTTPException(status_code=400, detail="No seats available")
-
-#     price = calculate_dynamic_price(flight["base_fare"], flight["seats_available"], flight["total_seats"], flight["departure"])
-
-    
-#     cur.execute("UPDATE flights SET seats_available = seats_available - 1 WHERE id = %s;", (booking.flight_id,))
-
-    
-#     cur.execute("""
-#         INSERT INTO bookings (flight_id, passenger_id, seat_no)
-#         VALUES (%s, %s, %s) RETURNING *;
-#     """, (booking.flight_id, booking.passenger_id, booking.seat_no))
-#     new_booking = cur.fetchone()
-
-    
-#     price = calculate_dynamic_price(
-#         base_fare=flight["base_fare"],
-#         seats_available=flight["seats_available"],
-#         total_seats=flight["total_seats"],
-#         departure_time=flight["departure"]
-#     )
-
-    
-#     cur.execute("""
-#         INSERT INTO transactions (booking_id, amount, status)
-#         VALUES (%s, %s, %s) RETURNING *;
-#     """, (new_booking["booking_id"], price, "SUCCESS"))
-#     new_transaction = cur.fetchone()
-
-#     conn.commit()
-#     conn.close()
-
-#     return {"booking": new_booking, "transaction": new_transaction, "price": price, "pnr": generate_pnr()}
->>>>>>> 20c0fc9 (milestore 3)
 
 @app.post("/bookings")
 def create_booking(booking: Booking):
@@ -155,10 +108,6 @@ def get_all_bookings():
     conn.close()
     return bookings
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 20c0fc9 (milestore 3)
 @app.get("/transactions")
 def get_all_transactions():
     conn = get_db_connection()
@@ -168,10 +117,6 @@ def get_all_transactions():
     conn.close()
     return tx
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 20c0fc9 (milestore 3)
 @app.get("/pricing_rules")
 def get_pricing_rules():
     conn = get_db_connection()
@@ -181,10 +126,6 @@ def get_pricing_rules():
     conn.close()
     return rules
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 20c0fc9 (milestore 3)
 @app.get("/fare_history")
 def get_fare_history():
     conn = get_db_connection()
