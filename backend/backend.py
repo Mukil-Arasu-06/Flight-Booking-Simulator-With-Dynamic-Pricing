@@ -3,8 +3,28 @@ from backend.db_config import get_db_connection
 from backend.models import Flight, Passenger, Booking, Transaction, PricingRule, FareHistory
 from backend.utils import generate_pnr
 from backend.pricing_engine import calculate_dynamic_price
+from fastapi.middleware.cors import CORSMiddleware
+from datetime import datetime
+from backend.models import FlightSearch
+
+
+
+import psycopg2
+
+
 
 app = FastAPI(title="Flight Booking System")
+
+
+
+app.add_middleware(
+  CORSMiddleware,
+  allow_origins=["http://localhost:5173"],  # Vite default
+  allow_credentials=True,
+  allow_methods=["*"],
+  allow_headers=["*"],
+)
+
 
 
 @app.get("/")
@@ -134,3 +154,56 @@ def get_fare_history():
     history = cur.fetchall()
     conn.close()
     return history
+
+
+# ✅ /search endpoint
+@app.post("/search")
+def search_flights(search: FlightSearch):
+    try:
+        # Database connection (update credentials)
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        # Convert date string to actual date
+        search_date = datetime.strptime(search.date, "%Y-%m-%d").date()
+
+        # ✅ Query adjusted to your actual column names
+        query = """
+            SELECT id, flight_no, origin, destination, departure, arrival, base_fare,
+                   total_seats, seats_available, airline_name
+            FROM flights
+            WHERE origin = %s 
+              AND destination = %s 
+              AND DATE(departure) = %s;
+        """
+        cur.execute(query, (search.origin, search.destination, search_date))
+        results = cur.fetchall()
+
+        cur.close()
+        conn.close()
+
+        # No results found
+        if not results:
+            raise HTTPException(status_code=404, detail="No flights found for given criteria")
+
+        # ✅ Convert tuples into Flight objects
+        flights = [
+            Flight(
+                id=row[0],
+                flight_no=row[1],
+                origin=row[2],
+                destination=row[3],
+                departure=row[4],
+                arrival=row[5],
+                base_fare=row[6],
+                total_seats=row[7],
+                seats_available=row[8],
+                airline_name=row[9],
+            )
+            for row in results
+        ]
+
+        return flights
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

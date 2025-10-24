@@ -1,0 +1,28 @@
+/* SearchForm.css */
+form {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+form div {
+  margin-bottom: 15px;
+}
+
+input[type="text"], input[type="date"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  transition: 0.3s;
+}
+
+input[type="text"]:focus, input[type="date"]:focus {
+  border-color: #1d3557;
+  outline: none;
+}
+
+label {
+  font-weight: 600;
+}

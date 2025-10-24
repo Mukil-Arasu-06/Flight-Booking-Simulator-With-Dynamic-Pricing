@@ -2,6 +2,12 @@ from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
 
+
+class FlightSearch(BaseModel):
+    origin: str
+    destination: str
+    date: str 
+
 class Flight(BaseModel):
     id: Optional[int] = None
     flight_no: str
