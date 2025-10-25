@@ -65,26 +65,5 @@ It allows users to **search, view, and book flights** dynamically by connecting 
 
 ---
 
-## 🏗️ Project Structure
 
-# ✈️ Flight Booking System — Frontend
-
-This is the **React-based frontend** for the **Flight Booking System** project.  
-It allows users to **search, view, and book flights** dynamically by connecting with the FastAPI backend.
-
----
-
-## 🚀 Features
-
-- 🔍 **Flight Search** — Search flights by origin, destination, and date  
-- 📅 **Date-based Filtering** — View flights available on a selected day  
-- 🎫 **One-way / Round-trip Options**  
-- 🎨 **Attractive UI** built with React & CSS  
-- ⚡ **Fast Navigation** using React Router  
-- 🧭 **Dynamic Results Page** showing available flights with timing and fare  
-- 🔗 **Connected to FastAPI backend** for real-time flight data  
-
----
-
-## 🏗️ Project Structure
 
