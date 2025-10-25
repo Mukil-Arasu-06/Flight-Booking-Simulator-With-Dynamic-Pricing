@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getFlightPrice } from "../api/api";
-//import "./FlightCard.css";
+import "../styles/FlightCard.css";
 
 
 export default function FlightCard({ flight }){

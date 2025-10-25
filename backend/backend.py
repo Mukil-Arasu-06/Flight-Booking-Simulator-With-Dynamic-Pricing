@@ -156,37 +156,50 @@ def get_fare_history():
     return history
 
 
-# ✅ /search endpoint
+
 @app.post("/search")
 def search_flights(search: FlightSearch):
     try:
-        # Database connection (update credentials)
         conn = get_db_connection()
         cur = conn.cursor()
 
-        # Convert date string to actual date
-        search_date = datetime.strptime(search.date, "%Y-%m-%d").date()
+        # Convert "2025-03-01T10:00" to datetime object
+        try:
+            search_datetime = datetime.strptime(search.datetime, "%Y-%m-%dT%H:%M")
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid datetime format. Use YYYY-MM-DDTHH:MM")
 
-        # ✅ Query adjusted to your actual column names
+        search_date = search_datetime.date()
+
+        # 🧩 Debug print — check the data before query
+        print("🔍 Searching flights for:")
+        print("Origin:", search.origin)
+        print("Destination:", search.destination)
+        print("Date:", search_date)
+
         query = """
             SELECT id, flight_no, origin, destination, departure, arrival, base_fare,
                    total_seats, seats_available, airline_name
             FROM flights
-            WHERE origin = %s 
-              AND destination = %s 
-              AND DATE(departure) = %s;
+            WHERE origin = %s
+              AND destination = %s
+              AND CAST(departure AS DATE) = %s;
         """
+
+        # 🧩 Print final SQL parameters
+        print("Query Params:", (search.origin, search.destination, search_date))
+
         cur.execute(query, (search.origin, search.destination, search_date))
         results = cur.fetchall()
+
+        print("✅ Query executed successfully, rows:", len(results))
 
         cur.close()
         conn.close()
 
-        # No results found
         if not results:
             raise HTTPException(status_code=404, detail="No flights found for given criteria")
 
-        # ✅ Convert tuples into Flight objects
         flights = [
             Flight(
                 id=row[0],
@@ -205,5 +218,8 @@ def search_flights(search: FlightSearch):
 
         return flights
 
+    except HTTPException as e:
+        raise e
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print("❌ Internal Server Error:", repr(e))
+        raise HTTPException(status_code=500, detail="Internal Server Error: " + str(e))

@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-//import "./SearchForm.css";
+import "../styles/SearchForm.css";
+
 
 
 export default function SearchForm() {
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
-  const [date, setDate] = useState("");
+  const [datetime, setDatetime] = useState("");
   const [tripType, setTripType] = useState("oneway");
   const navigate = useNavigate();
 
@@ -21,13 +22,13 @@ export default function SearchForm() {
       body: JSON.stringify({
         origin: origin,
         destination: destination,
-        date: date, 
+        datetime: datetime, 
       }),
     });
 
     if (response.ok) {
       const data = await response.json();
-      navigate("/results", { state: { flights: data } });
+      navigate("/results", { state: { flights: datatime } });
     } else {
       const error = await response.json();
       alert(error.detail || "No flights found");
@@ -53,15 +54,15 @@ export default function SearchForm() {
         />
       </div>
       <div>
-        <label>Date</label>
+        <label>Date & Time</label>
         <input
-          type="date"
+          type="datetime-local"
           required
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
+          value={datetime}
+          onChange={(e) => setDatetime(e.target.value)}
         />
       </div>
-      <div>
+      {/* <div>
         <label>
           <input
             type="radio"
@@ -78,7 +79,7 @@ export default function SearchForm() {
           />{" "}
           Round-trip
         </label>
-      </div>
+      </div> */}
       <button type="submit">Search</button>
     </form>
   );

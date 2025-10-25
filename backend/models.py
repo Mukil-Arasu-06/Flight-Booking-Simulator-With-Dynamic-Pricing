@@ -6,7 +6,7 @@ from typing import Optional
 class FlightSearch(BaseModel):
     origin: str
     destination: str
-    date: str 
+    datetime: str 
 
 class Flight(BaseModel):
     id: Optional[int] = None

@@ -2,7 +2,7 @@ import { useLocation, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { api, searchFlights, getFlights } from "../api/api";
 import FlightCard from "../components/FlightCard";
-//import "./Results.css";
+import "../styles/Results.css";
 
 
 export default function Results(){
