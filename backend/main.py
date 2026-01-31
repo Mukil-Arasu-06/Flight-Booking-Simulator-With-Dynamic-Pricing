@@ -163,63 +163,45 @@ def search_flights(search: FlightSearch):
         conn = get_db_connection()
         cur = conn.cursor()
 
-        # Convert "2025-03-01T10:00" to datetime object
-        try:
-            search_datetime = datetime.strptime(search.datetime, "%Y-%m-%dT%H:%M")
-        except ValueError:
-            raise HTTPException(status_code=400, detail="Invalid datetime format. Use YYYY-MM-DDTHH:MM")
-
-        search_date = search_datetime.date()
-
-        # 🧩 Debug print — check the data before query
-        print("🔍 Searching flights for:")
-        print("Origin:", search.origin)
-        print("Destination:", search.destination)
-        print("Date:", search_date)
-
         query = """
             SELECT id, flight_no, origin, destination, departure, arrival, base_fare,
                    total_seats, seats_available, airline_name
             FROM flights
             WHERE origin = %s
-              AND destination = %s
-              AND CAST(departure AS DATE) = %s;
+              AND destination = %s;
         """
 
-        # 🧩 Print final SQL parameters
-        print("Query Params:", (search.origin, search.destination, search_date))
-
-        cur.execute(query, (search.origin, search.destination, search_date))
+        cur.execute(query, (search.origin, search.destination))
         results = cur.fetchall()
-
-        print("✅ Query executed successfully, rows:", len(results))
-
+        print(results)
         cur.close()
         conn.close()
 
         if not results:
             raise HTTPException(status_code=404, detail="No flights found for given criteria")
 
-        flights = [
-            Flight(
-                id=row[0],
-                flight_no=row[1],
-                origin=row[2],
-                destination=row[3],
-                departure=row[4],
-                arrival=row[5],
-                base_fare=row[6],
-                total_seats=row[7],
-                seats_available=row[8],
-                airline_name=row[9],
-            )
-            for row in results
-        ]
+        # flights = [
+        #     {
+        #         "id": results[0],
+        #         "flight_no": results[1],
+        #         "origin": results[2],
+        #         "destination": results[3],
+        #         "departure": results[4],
+        #         "arrival": results[5],
+        #         "base_fare": results[6],
+        #         "total_seats": results[7],
+        #         "seats_available": results[8],
+        #         "airline_name": results[9],
+        #     }
+        #     for row in results
+        # ]
 
-        return flights
+        return results
 
     except HTTPException as e:
         raise e
     except Exception as e:
+        import traceback
+        print(traceback.format_exc())
         print("❌ Internal Server Error:", repr(e))
         raise HTTPException(status_code=500, detail="Internal Server Error: " + str(e))

@@ -7,8 +7,6 @@ import "../styles/SearchForm.css";
 export default function SearchForm() {
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
-  const [datetime, setDatetime] = useState("");
-  const [tripType, setTripType] = useState("oneway");
   const navigate = useNavigate();
 
   async function submit(e) {
@@ -22,13 +20,12 @@ export default function SearchForm() {
       body: JSON.stringify({
         origin: origin,
         destination: destination,
-        datetime: datetime, 
       }),
     });
 
     if (response.ok) {
       const data = await response.json();
-      navigate("/results", { state: { flights: datatime } });
+      navigate("/results", { state: { flights: data } });
     } else {
       const error = await response.json();
       alert(error.detail || "No flights found");
@@ -53,33 +50,6 @@ export default function SearchForm() {
           onChange={(e) => setDestination(e.target.value)}
         />
       </div>
-      <div>
-        <label>Date & Time</label>
-        <input
-          type="datetime-local"
-          required
-          value={datetime}
-          onChange={(e) => setDatetime(e.target.value)}
-        />
-      </div>
-      {/* <div>
-        <label>
-          <input
-            type="radio"
-            checked={tripType === "oneway"}
-            onChange={() => setTripType("oneway")}
-          />{" "}
-          One-way
-        </label>
-        <label style={{ marginLeft: 12 }}>
-          <input
-            type="radio"
-            checked={tripType === "round"}
-            onChange={() => setTripType("round")}
-          />{" "}
-          Round-trip
-        </label>
-      </div> */}
       <button type="submit">Search</button>
     </form>
   );
